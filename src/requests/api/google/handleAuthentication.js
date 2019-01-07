@@ -1,17 +1,26 @@
 import authenticateUser from '../../../google/authenticateUser';
+import generateJWT from '../../../generateJWT';
+import {
+  create,
+} from '../../../store/users';
 
-async function handleAuthentication(request) {
+async function handleAuthentication(request, response) {
   const {
-    query,
-  } = request;
+    token,
+  } = request.body;
+  const userDetails = await authenticateUser(token);
   const {
-    code,
-  } = query;
-  const userDetails = await authenticateUser(code);
-  const {
+    id: providerId,
     emailAddress,
   } = userDetails;
-  console.log('email is', emailAddress);
+  // TODO: @jaebradley probably want to wrap this in a transaction
+  await create({ emailAddress, provider: 'GOOGLE', providerId });
+  const jwt = generateJWT({ providerId, provider: 'GOOGLE' });
+  response.statusCode = 200;
+  response.setHeader('x-gifstore-auth-token', jwt);
+  response.json({
+    message: 'Authenticated',
+  });
 }
 
 export default handleAuthentication;

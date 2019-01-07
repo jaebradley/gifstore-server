@@ -4,6 +4,6 @@ import handleAuthentication from '../../../requests/api/google/handleAuthenticat
 
 const router = Router();
 
-router.get('/', handleAuthentication);
+router.post('/', handleAuthentication);
 
 export default router;

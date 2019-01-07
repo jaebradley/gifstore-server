@@ -22,13 +22,9 @@ function getGooglePlusApi(auth) {
  * Take the "code" parameter which Google gives us once when the user logs in,
  * then get the user's email and id.
  */
-async function authenticateUser(code) {
+async function authenticateUser(token) {
   const auth = authenticate();
-  const data = await auth.getToken(code);
-  const tokens = {
-    data,
-  };
-  auth.setCredentials(tokens);
+  auth.setCredentials({ access_token: token });
   const plus = getGooglePlusApi(auth);
   const me = await plus.people.get({ userId: 'me' });
   const userGoogleId = me.data.id;
@@ -36,7 +32,6 @@ async function authenticateUser(code) {
   return {
     id: userGoogleId,
     emailAddress: userGoogleEmail,
-    tokens,
   };
 }
 
