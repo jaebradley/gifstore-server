@@ -1,0 +1,11 @@
+{
+  "watch": [
+    "src"
+  ],
+  "ignore": [
+    "build/**"
+  ],
+  "execMap": {
+    "js": "npm run build && npm run start"
+  }
+}

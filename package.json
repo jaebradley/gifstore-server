@@ -1,0 +1,56 @@
+{
+  "name": "@jaebradley/gifstore-server",
+  "version": "0.0.0-development",
+  "private": true,
+  "engines": {
+    "node": "10.14.1",
+    "npm": "6.4.1"
+  },
+  "description": "Server for gifstore service",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src -d build --delete-dir-on-start",
+    "start": "node build/index.js",
+    "dev": "./node_modules/.bin/nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jae.b.bradley@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaebradley/gifstore-server.git"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.2.0",
+    "axios": "^0.18.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "bookshelf": "^0.14.2",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "express-graphql": "^0.7.1",
+    "express-jwt": "^5.3.1",
+    "express-promise-router": "^3.0.3",
+    "googleapis": "^36.0.0",
+    "graphql": "^14.0.2",
+    "knex": "0.14.6",
+    "passport": "^0.4.0",
+    "pg": "^7.7.1",
+    "uuid": "^3.3.2",
+    "webpack": "^4.28.3",
+    "webpack-dev-server": "^3.1.14"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-async-to-generator": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-env": "^7.2.3",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.12.0",
+    "nodemon": "^1.18.9"
+  }
+}
