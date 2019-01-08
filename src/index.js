@@ -23,7 +23,7 @@ const corsOptions = {
   origin: 'http://localhost:8080',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  exposedHeaders: ['x-auth-token'],
+  exposedHeaders: ['x-gifstore-auth-token'],
 };
 
 app.use(logger());
