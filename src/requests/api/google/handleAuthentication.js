@@ -15,7 +15,7 @@ async function handleAuthentication(request, response) {
     emailAddress,
   } = userDetails;
   // TODO: @jaebradley probably want to wrap this in a transaction
-  const user = await get({ emailAddress });
+  const user = await get({ provider: 'GOOGLE', providerId });
   if (!user) {
     await create({ emailAddress, provider: 'GOOGLE', providerId });
   }
