@@ -1,3 +1,4 @@
+import unless from 'express-unless';
 import {
   get,
 } from '../store/users';
@@ -13,5 +14,7 @@ async function identifyCurrentUser(request, _, next) {
 
   next();
 }
+
+identifyCurrentUser.unless = unless;
 
 export default identifyCurrentUser;

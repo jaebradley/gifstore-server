@@ -21,7 +21,7 @@ async function get({ provider, providerId }) {
 }
 
 async function getById(id) {
-  return knex('users').select(['id', 'email_address']).where({ id }).first();
+  return knex('users').select(['id', 'email_address']).where('id', id).first();
 }
 
 export {
