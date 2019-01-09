@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
 app.use(expressJWT({ secret: JWT_SECRET }).unless({ path: ['/api/google/authentication'] }));
-app.use(identifyCurrentUser);
+app.use(identifyCurrentUser.unless({ path: ['/api/google/authentication'] }));
 
 app.use('/api', api);
 

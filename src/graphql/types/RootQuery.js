@@ -1,32 +1,34 @@
 import {
   GraphQLObjectType,
-  GraphQLInt,
-  GraphQLNonNull,
 } from 'graphql';
 
 import {
   getById,
 } from '../../store/users';
-import User from './User';
+import UserType from './User';
+import User from '../../data/User';
+import {
+  nodeField,
+} from '../NodeDefinitions';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQuery',
   fields: {
-    user: {
-      type: User,
-      args: { id: { type: GraphQLNonNull(GraphQLInt) } },
+    me: {
+      type: UserType,
+      args: {},
       resolve: async (parent, args, context) => {
-        if (context.currentUser.id === args.id) {
-          const user = await getById(context.currentUser.id);
-          return {
-            id: user.id,
-            emailAddress: user.email_address,
-          };
-        }
-
-        throw new Error('Unauthorized');
+        const {
+          id,
+          email_address: emailAddress,
+        } = await getById(context.currentUser.id);
+        return User({
+          id,
+          emailAddress,
+        });
       },
     },
+    node: nodeField,
   },
 });
 
