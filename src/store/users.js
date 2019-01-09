@@ -16,12 +16,17 @@ async function update({ emailAddress, provider, providerId }) {
   });
 }
 
-async function get({ emailAddress }) {
-  return knex('users').select(['provider', 'provider_id']).where({ email_address: emailAddress }).first();
+async function get({ provider, providerId }) {
+  return knex('users').select(['id', 'email_address', 'provider', 'provider_id']).where({ provider, provider_id: providerId }).first();
+}
+
+async function getById(id) {
+  return knex('users').select(['id', 'email_address']).where({ id }).first();
 }
 
 export {
   create,
   update,
   get,
+  getById,
 };
