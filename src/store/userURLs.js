@@ -15,8 +15,13 @@ async function getAllForUserId(userId) {
   return knex(TABLE_NAME).select(ROWS).where({ user_id: userId });
 }
 
+async function del({ userId, urlId }) {
+  return knex(TABLE_NAME).where({ user_id: userId, url_id: urlId }).del();
+}
+
 export {
   create,
+  del,
   get,
   getAllForUserId,
 };
