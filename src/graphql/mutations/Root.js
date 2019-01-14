@@ -14,6 +14,7 @@ import {
 import {
   get as getUserURL,
   create as createUserURL,
+  del as deleteUserURL,
 } from '../../store/userURLs';
 import URLType from '../types/URL';
 import URL from '../../data/URL';
@@ -37,6 +38,21 @@ const Root = new GraphQLObjectType({
         if (!userUrl) {
           await createUserURL({ userId: user.id, urlId: url.id });
         }
+        return URL(url);
+      },
+    },
+    DeleteURL: {
+      name: 'DeleteURL',
+      description: 'Delete a URL associated with current user',
+      type: URLType,
+      args: { url: { type: GraphQLNonNull(GraphQLString) } },
+      resolve: async (_, args, context) => {
+        const userId = context.currentUser.id;
+        const url = await getByURL(args.url);
+        if (!url) {
+          throw new Error(`URL ${args.url} does not exist`);
+        }
+        await deleteUserURL({ userId, urlId: url.id });
         return URL(url);
       },
     },
