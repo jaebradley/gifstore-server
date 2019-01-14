@@ -8,7 +8,7 @@ async function create({ userId, urlId }) {
 }
 
 async function get({ userId, urlId }) {
-  return knex(TABLE_NAME).select(ROWS).where({ user_id: userId, url_id: urlId });
+  return knex(TABLE_NAME).select(ROWS).where({ user_id: userId, url_id: urlId }).first();
 }
 
 async function getAllForUserId(userId) {

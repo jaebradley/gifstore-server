@@ -4,7 +4,8 @@ const TABLE_NAME = 'urls';
 const ROWS = ['id', 'url', 'created_at', 'updated_at'];
 
 async function create(url) {
-  return knex(TABLE_NAME).insert({ url }, ROWS);
+  const rows = await knex(TABLE_NAME).insert({ url }).returning(ROWS);
+  return rows[0];
 }
 
 async function getByIds(ids) {
@@ -12,7 +13,7 @@ async function getByIds(ids) {
 }
 
 async function getById(id) {
-  return getByIds([id]).first();
+  return knex(TABLE_NAME).select(ROWS).where('id', id).first();
 }
 
 async function getByURLs(urls) {
