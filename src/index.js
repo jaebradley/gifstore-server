@@ -22,7 +22,7 @@ const corsOptions = {
   origin: 'http://localhost:8080',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  exposedHeaders: ['x-gifstore-auth-token', 'x-gifstore-refresh-token'],
+  exposedHeaders: ['x-gifstore-auth-token'],
 };
 
 app.use(logger('combined'));
@@ -30,8 +30,8 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
-app.use(expressJWT({ secret: JWT_SECRET }).unless({ path: ['/api/google/authentication', '/api/authentication/refresh-credentials'] }));
-app.use(identifyCurrentUser.unless({ path: ['/api/google/authentication', '/api/authentication/refresh-credentials'] }));
+app.use(expressJWT({ secret: JWT_SECRET }).unless({ path: ['/api/google/authentication'] }));
+app.use(identifyCurrentUser.unless({ path: ['/api/google/authentication'] }));
 
 app.use('/api', api);
 

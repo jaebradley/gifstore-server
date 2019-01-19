@@ -4,15 +4,14 @@ import {
   JWT_SECRET,
 } from './config';
 
-function generateJWT({ userId, refreshToken }) {
+function generateJWT({ userId }) {
   return jwt.sign({
     userId,
-    refreshToken,
   },
   JWT_SECRET,
   {
-    // expire every 15 minutes
-    expiresIn: 60 * 15,
+    // expire every 7 days
+    expiresIn: 60 * 60 * 24 * 7,
   });
 }
 
