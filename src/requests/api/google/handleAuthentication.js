@@ -3,7 +3,7 @@ import {
   create,
   get,
 } from '../../../store/users';
-import createAuthentication from '../../../authentication/create';
+import generateJWT from '../../../generateJWT';
 
 async function handleAuthentication(request, response, next) {
   if (!request.body.token) {
@@ -28,13 +28,9 @@ async function handleAuthentication(request, response, next) {
     if (!user) {
       await create({ emailAddress, provider: 'GOOGLE', providerId });
     }
-    const {
-      jwt,
-      refreshToken,
-    } = await createAuthentication(user.id);
+    const jwt = generateJWT({ userId: user.id });
     response.statusCode = 200;
     response.setHeader('x-gifstore-auth-token', jwt);
-    response.setHeader('x-gifstore-refresh-token', refreshToken);
     response.json({
       message: 'Authenticated',
     });

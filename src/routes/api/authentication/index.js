@@ -1,9 +1,9 @@
 import Router from 'express-promise-router';
 
-import handleRefreshCredentials from './refreshCredentials';
+import handleAuthentication from '../../../requests/api/authentication';
 
 const router = Router();
 
-router.use('/refresh-credentials', handleRefreshCredentials);
+router.get('/', handleAuthentication);
 
 export default router;
