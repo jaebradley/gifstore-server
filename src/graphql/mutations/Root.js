@@ -21,12 +21,8 @@ import {
 } from '../../store/userURLs';
 import URLType from '../types/URL';
 import URL from '../../data/URL';
-import LabelType from '../types/Label';
 import Label from '../../data/Label';
 import AddLabelInput from '../inputs/AddLabel';
-import {
-  getAllForUserURL,
-} from '../../store/userURLLabels';
 import {
   create as createLabel,
   getByName as getLabelByName,

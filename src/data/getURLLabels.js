@@ -1,7 +1,4 @@
 import {
-  List,
-} from 'immutable';
-import {
   getAllForURLId as getAllUserURLsForURLId,
 } from '../store/userURLs';
 import Label from './Label';
