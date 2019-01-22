@@ -3,6 +3,9 @@ import {
   GraphQLString,
   GraphQLNonNull,
 } from 'graphql';
+import {
+  List,
+} from 'immutable';
 
 import {
   getById,
@@ -18,6 +21,17 @@ import {
 } from '../../store/userURLs';
 import URLType from '../types/URL';
 import URL from '../../data/URL';
+import Label from '../../data/Label';
+import AddLabelInput from '../inputs/AddLabel';
+import {
+  create as createLabel,
+  getByName as getLabelByName,
+  getByIds as getLabelsByIds,
+} from '../../store/labels';
+import {
+  create as createUserURLLabel,
+  getAllForUserURL as getAllUserURLLabelsForUserURL,
+} from '../../store/userURLLabels';
 
 const Root = new GraphQLObjectType({
   name: 'RootMutation',
@@ -38,7 +52,11 @@ const Root = new GraphQLObjectType({
         if (!userUrl) {
           await createUserURL({ userId: user.id, urlId: url.id });
         }
-        return URL(url);
+        const labels = await getAllForUserURL(userUrl.id);
+        return URL({
+          ...url,
+          labels: List(labels.map(label => Label(label))),
+        });
       },
     },
     DeleteURL: {
@@ -54,6 +72,39 @@ const Root = new GraphQLObjectType({
         }
         await deleteUserURL({ userId, urlId: url.id });
         return URL(url);
+      },
+    },
+    addLabelToURLForCurrentUser: {
+      name: 'Add label to URL',
+      description: 'Add label to specified URL fro current user',
+      type: URLType,
+      args: {
+        input: {
+          type: GraphQLNonNull(AddLabelInput),
+        },
+      },
+      resolve: async (_, args, context) => {
+        const userId = context.currentUser.id;
+        const url = await getByURL(args.input.url);
+        if (!url) {
+          throw new Error(`URL ${args.input.url} does not exist`);
+        }
+        const userURL = await getUserURL({ userId, urlId: url.id });
+        if (!userURL) {
+          throw new Error('User does not have URL');
+        }
+        let label = await getLabelByName(args.input.name);
+        if (!label) {
+          label = await createLabel({ name: args.input.name });
+        }
+        await createUserURLLabel({ userURLId: userURL.id, labelId: label.id });
+        const userURLLabels = await getAllUserURLLabelsForUserURL(userURL.id);
+        const labelIds = userURLLabels.map(uul => uul.label_id);
+        const labels = await getLabelsByIds(labelIds);
+        return URL({
+          ...url,
+          labels: labels.map(l => Label(l)),
+        });
       },
     },
   },

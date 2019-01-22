@@ -2,15 +2,16 @@ import {
   getAllForUserId,
 } from '../../store/userURLs';
 import {
-  getByIds,
+  getById,
 } from '../../store/urls';
 import URL from '../../data/URL';
 
 async function GetURLsForUser(userId) {
   const userURLs = await getAllForUserId(userId);
-  const urlIds = userURLs.map(userURL => userURL.url_id);
-  const urls = await getByIds(urlIds);
-  return urls.map(url => URL(url));
+  return userURLs.map(async (userURL) => {
+    const url = await getById(userURL.url_id);
+    return URL({ id: userURL.id, url: url.url });
+  });
 }
 
 export default GetURLsForUser;

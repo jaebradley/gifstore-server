@@ -1,10 +1,12 @@
+const LABEL_TABLE_NAME = require('./20190119114016_create_labels').TABLE_NAME;
+
 const TABLE_NAME = 'user_url_labels';
 
 function up(knex) {
   return knex.schema.createTable(TABLE_NAME, (table) => {
     table.increments('id').primary();
     table.bigInteger('user_url_id').notNullable();
-    table.string('label').notNullable();
+    table.bigInteger('label_id').notNullable();
     table.timestamps(true, true);
 
     table
@@ -13,9 +15,14 @@ function up(knex) {
       .inTable('user_urls')
       .onDelete('CASCADE');
 
-    table.unique(['user_url_id', 'label']);
-    table.index(['user_url_id', 'label']);
-    table.index('label', 'GIN');
+    table
+      .foreign('label_id')
+      .references('id')
+      .inTable(LABEL_TABLE_NAME)
+      .onDelete('CASCADE');
+
+    table.unique(['user_url_id', 'label_id']);
+    table.index(['user_url_id', 'label_id']);
   });
 }
 
@@ -26,4 +33,5 @@ function down(knex) {
 module.exports = {
   up,
   down,
+  TABLE_NAME,
 };
