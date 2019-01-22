@@ -52,7 +52,7 @@ const Root = new GraphQLObjectType({
         if (!userUrl) {
           await createUserURL({ userId: user.id, urlId: url.id });
         }
-        const labels = await getAllForUserURL(userUrl.id);
+        const labels = await getAllUserURLLabelsForUserURL(userUrl.id);
         return URL({
           ...url,
           labels: List(labels.map(label => Label(label))),
