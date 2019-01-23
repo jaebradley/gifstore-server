@@ -12,13 +12,14 @@ import {
 } from '../../store/urls';
 import {
   get as getUserURL,
-  del as deleteUserURL,
 } from '../../store/userURLs';
 import URLType from '../types/URL';
 import UserURLType from '../types/UserURL';
+import DeleteUserURLForCurrentUserPayloadType from '../types/DeleteUserURLForCurrentUserPayload';
 import URL from '../data/nodes/URL';
 import Label from '../data/nodes/Label';
 import AddLabelInput from '../inputs/AddLabel';
+import DeleteUserURLForCurrentUserInput from '../inputs/DeleteUserURLForCurrentUser';
 import {
   create as createLabel,
   getByName as getLabelByName,
@@ -29,6 +30,7 @@ import {
   getAllForUserURL as getAllUserURLLabelsForUserURL,
 } from '../../store/userURLLabels';
 import createUserURL from '../resolvers/createUserURL';
+import deleteUserURL from '../resolvers/deleteUserURL';
 import createURL from '../resolvers/createURL';
 
 const Root = new GraphQLObjectType({
@@ -65,19 +67,28 @@ const Root = new GraphQLObjectType({
         throw new Error('Expected a URL id');
       },
     },
-    DeleteURL: {
-      name: 'DeleteURL',
+    deleteUserURLForCurrentUser: {
+      name: 'deleteUserURLForCurrentUser',
       description: 'Delete a URL associated with current user',
-      type: URLType,
-      args: { url: { type: GraphQLNonNull(GraphQLString) } },
-      resolve: async (_, args, context) => {
-        const userId = context.currentUser.id;
-        const url = await getByURL(args.url);
-        if (!url) {
-          throw new Error(`URL ${args.url} does not exist`);
+      type: DeleteUserURLForCurrentUserPayloadType,
+      args: {
+        input: {
+          type: GraphQLNonNull(DeleteUserURLForCurrentUserInput),
+        },
+      },
+      resolve: async (_, args) => {
+        const {
+          type,
+          id: userURLId,
+        } = fromGlobalId(args.input.userURLId);
+        if (type === 'UserURL') {
+          await deleteUserURL(userURLId);
+          return {
+            id: userURLId,
+          };
         }
-        await deleteUserURL({ userId, urlId: url.id });
-        return URL(url);
+
+        throw new Error('Expected a UserURL id');
       },
     },
     addLabelToURLForCurrentUser: {
