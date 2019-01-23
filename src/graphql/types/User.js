@@ -11,8 +11,8 @@ import {
 import {
   nodeInterface,
 } from '../NodeDefinitions';
-import GetURLsForUser from '../resolvers/GetURLsForUser';
-import URLsConnection from '../connections/URLs';
+import getUserURLs from '../data/getUserURLs';
+import UserURLsConnection from '../connections/UserURLs';
 
 const User = new GraphQLObjectType({
   name: 'User',
@@ -24,10 +24,10 @@ const User = new GraphQLObjectType({
       type: GraphQLString,
     },
     urls: {
-      type: URLsConnection,
+      type: UserURLsConnection,
       description: 'URLs for user',
       args: connectionArgs,
-      resolve: (user, args) => connectionFromPromisedArray(GetURLsForUser(user.get('id')), args),
+      resolve: (user, args) => connectionFromPromisedArray(getUserURLs(user.get('id')), args),
     },
   },
 });

@@ -20,8 +20,8 @@ import {
   del as deleteUserURL,
 } from '../../store/userURLs';
 import URLType from '../types/URL';
-import URL from '../../data/URL';
-import Label from '../../data/Label';
+import URL from '../data/nodes/URL';
+import Label from '../data/nodes/Label';
 import AddLabelInput from '../inputs/AddLabel';
 import {
   create as createLabel,
@@ -52,7 +52,7 @@ const Root = new GraphQLObjectType({
         if (!userUrl) {
           await createUserURL({ userId: user.id, urlId: url.id });
         }
-        const labels = await getAllForUserURL(userUrl.id);
+        const labels = await getAllUserURLLabelsForUserURL(userUrl.id);
         return URL({
           ...url,
           labels: List(labels.map(label => Label(label))),

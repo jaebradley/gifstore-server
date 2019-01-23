@@ -23,10 +23,15 @@ async function del({ userId, urlId }) {
   return knex(TABLE_NAME).where({ user_id: userId, url_id: urlId }).del();
 }
 
+async function getById(id) {
+  return knex(TABLE_NAME).where({ id }).first();
+}
+
 export {
   create,
   del,
   get,
   getAllForUserId,
   getAllForURLId,
+  getById,
 };

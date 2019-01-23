@@ -1,13 +1,13 @@
 import {
   getAllForURLId as getAllUserURLsForURLId,
-} from '../store/userURLs';
-import Label from './Label';
+} from '../../store/userURLs';
+import Label from './nodes/Label';
 import {
   getAllForUserURLs as getAllUserURLLabelsForUserURLs,
-} from '../store/userURLLabels';
+} from '../../store/userURLLabels';
 import {
   getByIds as getLabelsByIds,
-} from '../store/labels';
+} from '../../store/labels';
 
 export default async function getURLLabels(urlId) {
   const userURLs = await getAllUserURLsForURLId(urlId);
