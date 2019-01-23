@@ -23,8 +23,8 @@ async function getAllForURLId(urlId) {
   return knex(TABLE_NAME).select(ROWS).where({ url_id: urlId });
 }
 
-async function del({ userId, urlId }) {
-  return knex(TABLE_NAME).where({ user_id: userId, url_id: urlId }).del();
+async function del({ id, transaction }) {
+  return knex(TABLE_NAME).where({ id }).del().transacting(transaction);
 }
 
 async function getById(id) {
