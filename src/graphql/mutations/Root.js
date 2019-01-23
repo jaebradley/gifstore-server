@@ -7,31 +7,19 @@ import {
 import {
   fromGlobalId,
 } from 'graphql-relay';
-import {
-  getByURL,
-} from '../../store/urls';
-import {
-  get as getUserURL,
-} from '../../store/userURLs';
 import URLType from '../types/URL';
 import UserURLType from '../types/UserURL';
 import DeleteUserURLForCurrentUserPayloadType from '../types/DeleteUserURLForCurrentUserPayload';
-import URL from '../data/nodes/URL';
-import Label from '../data/nodes/Label';
+import LabelType from '../types/Label';
+import UserURLLabelType from '../types/UserURLLabel';
 import AddLabelInput from '../inputs/AddLabel';
 import DeleteUserURLForCurrentUserInput from '../inputs/DeleteUserURLForCurrentUser';
-import {
-  create as createLabel,
-  getByName as getLabelByName,
-  getByIds as getLabelsByIds,
-} from '../../store/labels';
-import {
-  create as createUserURLLabel,
-  getAllForUserURL as getAllUserURLLabelsForUserURL,
-} from '../../store/userURLLabels';
+import CreateLabelInput from '../inputs/CreateLabel';
 import createUserURL from '../resolvers/createUserURL';
 import deleteUserURL from '../resolvers/deleteUserURL';
 import createURL from '../resolvers/createURL';
+import createLabel from '../resolvers/createLabel';
+import createUserURLLabelForCurrentUser from '../resolvers/createUserURLLabelForCurrentUser';
 
 const Root = new GraphQLObjectType({
   name: 'RootMutation',
@@ -91,38 +79,30 @@ const Root = new GraphQLObjectType({
         throw new Error('Expected a UserURL id');
       },
     },
-    addLabelToURLForCurrentUser: {
-      name: 'Add label to URL',
-      description: 'Add label to specified URL fro current user',
-      type: URLType,
+    createLabel: {
+      name: 'createLabel',
+      description: 'Create a Label',
+      type: LabelType,
+      args: {
+        input: {
+          type: GraphQLNonNull(CreateLabelInput),
+        },
+      },
+      resolve: async (_, args) => createLabel(args.input.name),
+    },
+    createUserURLLabelForCurrentUser: {
+      name: 'createUserURLLabelForCurrentUser',
+      description: 'Associate specified Label and UserURL',
+      type: UserURLLabelType,
       args: {
         input: {
           type: GraphQLNonNull(AddLabelInput),
         },
       },
-      resolve: async (_, args, context) => {
-        const userId = context.currentUser.id;
-        const url = await getByURL(args.input.url);
-        if (!url) {
-          throw new Error(`URL ${args.input.url} does not exist`);
-        }
-        const userURL = await getUserURL({ userId, urlId: url.id });
-        if (!userURL) {
-          throw new Error('User does not have URL');
-        }
-        let label = await getLabelByName(args.input.name);
-        if (!label) {
-          label = await createLabel({ name: args.input.name });
-        }
-        await createUserURLLabel({ userURLId: userURL.id, labelId: label.id });
-        const userURLLabels = await getAllUserURLLabelsForUserURL(userURL.id);
-        const labelIds = userURLLabels.map(uul => uul.label_id);
-        const labels = await getLabelsByIds(labelIds);
-        return URL({
-          ...url,
-          labels: labels.map(l => Label(l)),
-        });
-      },
+      resolve: async (_, args, context) => createUserURLLabelForCurrentUser({
+        currentUser: context.currentUser,
+        args,
+      }),
     },
   },
 });

@@ -15,8 +15,13 @@ async function getAllForUserURLs(userURLIds) {
   return knex(TABLE_NAME).select(ROWS).whereIn('user_url_id', userURLIds);
 }
 
+async function getById(id) {
+  return knex(TABLE_NAME).select(ROWS).where('id', id);
+}
+
 export {
   create,
   getAllForUserURL,
   getAllForUserURLs,
+  getById,
 };
