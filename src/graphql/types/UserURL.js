@@ -8,7 +8,7 @@ import {
   connectionArgs,
 } from 'graphql-relay';
 import LabelsConnection from '../connections/Labels';
-import getURLLabels from '../../data/getURLLabels';
+import getURLLabels from '../data/getURLLabels';
 import {
   nodeInterface,
 } from '../NodeDefinitions';

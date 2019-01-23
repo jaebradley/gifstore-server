@@ -20,8 +20,8 @@ import {
   del as deleteUserURL,
 } from '../../store/userURLs';
 import URLType from '../types/URL';
-import URL from '../../data/URL';
-import Label from '../../data/Label';
+import URL from '../data/nodes/URL';
+import Label from '../data/nodes/Label';
 import AddLabelInput from '../inputs/AddLabel';
 import {
   create as createLabel,

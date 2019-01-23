@@ -3,11 +3,10 @@ import {
   fromGlobalId,
 } from 'graphql-relay';
 
-import { List } from 'immutable';
-import User from '../data/User';
-import URL from '../data/URL';
-import Label from '../data/Label';
-import UserURL from '../data/UserURL';
+import User from './data/nodes/User';
+import URL from './data/nodes/URL';
+import Label from './data/nodes/Label';
+import UserURL from './data/nodes/UserURL';
 
 import UserType from './types/User';
 import URLType from './types/URL';
@@ -26,7 +25,6 @@ import {
 import {
   getById as getUserURLById,
 } from '../store/userURLs';
-import getURLLabels from '../data/getURLLabels';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   async (globalId) => {
@@ -59,12 +57,10 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       } = await getUserURLById(id);
       const user = await getUserById(userId);
       const url = await getURLById(urlId);
-      const labels = await getURLLabels(urlId);
       return UserURL({
         id: userURLId,
         user: User(user),
         url: URL(url),
-        labels,
       });
     }
 

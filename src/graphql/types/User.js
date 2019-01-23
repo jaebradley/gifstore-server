@@ -11,7 +11,7 @@ import {
 import {
   nodeInterface,
 } from '../NodeDefinitions';
-import getUserURLs from '../../data/getUserURLs';
+import getUserURLs from '../data/getUserURLs';
 import UserURLsConnection from '../connections/UserURLs';
 
 const User = new GraphQLObjectType({
