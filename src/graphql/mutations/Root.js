@@ -2,24 +2,20 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLID,
 } from 'graphql';
 import {
-  List,
-} from 'immutable';
-
+  fromGlobalId,
+} from 'graphql-relay';
 import {
-  getById,
-} from '../../store/users';
-import {
-  create as createURL,
   getByURL,
 } from '../../store/urls';
 import {
   get as getUserURL,
-  create as createUserURL,
   del as deleteUserURL,
 } from '../../store/userURLs';
 import URLType from '../types/URL';
+import UserURLType from '../types/UserURL';
 import URL from '../data/nodes/URL';
 import Label from '../data/nodes/Label';
 import AddLabelInput from '../inputs/AddLabel';
@@ -32,31 +28,41 @@ import {
   create as createUserURLLabel,
   getAllForUserURL as getAllUserURLLabelsForUserURL,
 } from '../../store/userURLLabels';
+import createUserURL from '../resolvers/createUserURL';
+import createURL from '../resolvers/createURL';
 
 const Root = new GraphQLObjectType({
   name: 'RootMutation',
   fields: {
-    AddURL: {
-      name: 'Add URL for current user',
-      description: 'Associate a URL with current user',
+    createURL: {
+      name: 'createURL',
+      description: 'Create a URL',
       type: URLType,
-      args: { url: { type: GraphQLNonNull(GraphQLString) } },
+      args: {
+        url: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (_, args) => createURL(args.url),
+    },
+    createUserURLForCurrentUser: {
+      name: 'createUserURLForCurrentUser',
+      description: 'Associate a URL with current user',
+      type: UserURLType,
+      args: { urlId: { type: GraphQLNonNull(GraphQLID) } },
       resolve: async (_, args, context) => {
-        // TODO: @jaebradley wrap this in a transaction
-        const user = await getById(context.currentUser.id);
-        let url = await getByURL(args.url);
-        if (!url) {
-          url = await createURL(args.url);
+        const {
+          type,
+          id: urlId,
+        } = fromGlobalId(args.urlId);
+        if (type === 'URL') {
+          return createUserURL({
+            userId: context.currentUser.id,
+            urlId,
+          });
         }
-        const userUrl = await getUserURL({ userId: user.id, urlId: url.id });
-        if (!userUrl) {
-          await createUserURL({ userId: user.id, urlId: url.id });
-        }
-        const labels = await getAllUserURLLabelsForUserURL(userUrl.id);
-        return URL({
-          ...url,
-          labels: List(labels.map(label => Label(label))),
-        });
+
+        throw new Error('Expected a URL id');
       },
     },
     DeleteURL: {

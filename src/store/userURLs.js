@@ -3,8 +3,12 @@ import knex from './knex';
 const TABLE_NAME = 'user_urls';
 const ROWS = ['id', 'user_id', 'url_id', 'created_at', 'updated_at'];
 
-async function create({ userId, urlId }) {
-  return knex(TABLE_NAME).insert({ user_id: userId, url_id: urlId });
+async function create({ userId, urlId, transaction }) {
+  const rows = await knex(TABLE_NAME)
+    .returning(ROWS)
+    .insert({ user_id: userId, url_id: urlId })
+    .transacting(transaction);
+  return rows[0];
 }
 
 async function get({ userId, urlId }) {
