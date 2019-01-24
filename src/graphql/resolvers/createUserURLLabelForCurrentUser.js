@@ -52,12 +52,15 @@ export default async function createUserURLLabelForCurrentUser({
     throw new Error('Unknown Label');
   }
 
-  if (userURL.user_id !== currentUser.user_id) {
+  if (Number(userURL.user_id) !== currentUser.id) {
     throw new Error('Unavailable UserURL');
   }
 
+  console.log(userURL);
+  console.log(label);
+
   return createUserURLLabel({
-    userURLId: userURL.id,
-    labelId: label.id,
+    userURLId: Number(userURL.id),
+    labelId: Number(label.id),
   });
 }

@@ -21,11 +21,14 @@ export default async function getUserURL(id) {
     getURLById(userURL.url_id),
   ]);
   return UserURL({
-    id: userURL.id,
+    id: Number(userURL.id),
     url: URL({
-      id: url.id,
+      id: Number(url.id),
       url: url.url,
     }),
-    user: User(user),
+    user: User({
+      id: Number(user.id),
+      emailAddress: user.emailAddress,
+    }),
   });
 }

@@ -23,12 +23,6 @@ const UserURL = new GraphQLObjectType({
     url: {
       type: GraphQLNonNull(URLType),
     },
-    labels: {
-      type: LabelsConnection,
-      description: 'Labels for URL assigned to a User',
-      args: connectionArgs,
-      resolve: (userURL, args) => connectionFromPromisedArray(getURLLabels(userURL.get('id')), args),
-    },
   },
 });
 
