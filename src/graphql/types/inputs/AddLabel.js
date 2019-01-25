@@ -7,7 +7,7 @@ import {
 const AddLabel = new GraphQLInputObjectType({
   name: 'AddLabelInput',
   fields: {
-    userURLId: {
+    urlId: {
       type: GraphQLNonNull(GraphQLID),
     },
     labelId: {

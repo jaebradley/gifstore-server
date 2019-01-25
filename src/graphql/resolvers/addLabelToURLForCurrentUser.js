@@ -3,28 +3,28 @@ import {
 } from 'graphql-relay';
 import createUserURLLabel from './createUserURLLabel';
 import {
-  getById as getUserURLById,
+  get as getUserURL,
 } from '../../store/userURLs';
 import {
   getById as getLabelById,
 } from '../../store/labels';
 
-export default async function createUserURLLabelForCurrentUser({
+export default async function addLabelToURLForCurrentUser({
   currentUser,
   args: {
     input: {
-      userURLId: userURLGlobalId,
+      urlId: urlGlobalId,
       labelId: labelGlobalId,
     },
   },
 }) {
   const {
-    type: userURLType,
-    id: userURLId,
-  } = fromGlobalId(userURLGlobalId);
+    type: urlType,
+    id: urlId,
+  } = fromGlobalId(urlGlobalId);
 
-  if (userURLType !== 'UserURL') {
-    throw new Error('Expected a UserURL id');
+  if (urlType !== 'URL') {
+    throw new Error('Expected a URL id');
   }
 
   const {
@@ -40,7 +40,7 @@ export default async function createUserURLLabelForCurrentUser({
     userURL,
     label,
   ] = await Promise.all([
-    getUserURLById(userURLId),
+    getUserURL({ urlId, userId: currentUser.id }),
     getLabelById(labelId),
   ]);
 
@@ -55,9 +55,6 @@ export default async function createUserURLLabelForCurrentUser({
   if (Number(userURL.user_id) !== currentUser.id) {
     throw new Error('Unavailable UserURL');
   }
-
-  console.log(userURL);
-  console.log(label);
 
   return createUserURLLabel({
     userURLId: Number(userURL.id),

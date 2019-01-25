@@ -12,7 +12,9 @@ import {
 import {
   nodeInterface,
 } from '../NodeDefinitions';
-import LabelsConnection from '../connections/Labels';
+import {
+  LabelConnection,
+} from './connections/Label';
 import getLabelsForURL from '../resolvers/getLabelsForURL';
 
 const URL = new GraphQLObjectType({
@@ -25,7 +27,7 @@ const URL = new GraphQLObjectType({
       type: GraphQLNonNull(GraphQLString),
     },
     labels: {
-      type: LabelsConnection,
+      type: LabelConnection,
       description: 'Labels for URL assigned to a User',
       args: connectionArgs,
       resolve: (url, args, context) => connectionFromPromisedArray(getLabelsForURL(url.get('id'), context), args),
