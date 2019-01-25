@@ -2,36 +2,26 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
-  GraphQLID,
 } from 'graphql';
 import {
   fromGlobalId,
 } from 'graphql-relay';
-import {
-  getByURL,
-} from '../../store/urls';
-import {
-  get as getUserURL,
-} from '../../store/userURLs';
 import URLType from '../types/URL';
-import UserURLType from '../types/UserURL';
-import DeleteUserURLForCurrentUserPayloadType from '../types/DeleteUserURLForCurrentUserPayload';
-import URL from '../data/nodes/URL';
-import Label from '../data/nodes/Label';
-import AddLabelInput from '../inputs/AddLabel';
-import DeleteUserURLForCurrentUserInput from '../inputs/DeleteUserURLForCurrentUser';
-import {
-  create as createLabel,
-  getByName as getLabelByName,
-  getByIds as getLabelsByIds,
-} from '../../store/labels';
-import {
-  create as createUserURLLabel,
-  getAllForUserURL as getAllUserURLLabelsForUserURL,
-} from '../../store/userURLLabels';
+import DeleteURLForCurrentUserPayloadType from '../types/DeleteURLForCurrentUser';
+import LabelType from '../types/Label';
+import UserURLLabelType from '../types/UserURLLabel';
+import AddLabelInput from '../types/inputs/AddLabel';
+import DeleteURLForCurrentUserInputType from '../types/inputs/DeleteURLForCurrentUser';
+import CreateURLInputType from '../types/inputs/CreateURL';
+import CreateCurrentUserURLInputType from '../types/inputs/CreateCurrentUserURL';
+import CreateUserURLPayload from '../types/payloads/CreateUserURL';
+import AddLabelToURLPayload from '../types/payloads/AddLabelToURL';
+import CreateLabelInput from '../types/inputs/CreateLabel';
 import createUserURL from '../resolvers/createUserURL';
 import deleteUserURL from '../resolvers/deleteUserURL';
 import createURL from '../resolvers/createURL';
+import createLabel from '../resolvers/createLabel';
+import addLabelToURLForCurrentUser from '../resolvers/addLabelToURLForCurrentUser';
 
 const Root = new GraphQLObjectType({
   name: 'RootMutation',
@@ -41,22 +31,26 @@ const Root = new GraphQLObjectType({
       description: 'Create a URL',
       type: URLType,
       args: {
-        url: {
-          type: GraphQLNonNull(GraphQLString),
+        input: {
+          type: GraphQLNonNull(CreateURLInputType),
         },
       },
-      resolve: async (_, args) => createURL(args.url),
+      resolve: async (_, args) => createURL(args.input.url),
     },
-    createUserURLForCurrentUser: {
-      name: 'createUserURLForCurrentUser',
+    createURLForCurrentUser: {
+      name: 'createURLForCurrentUser',
       description: 'Associate a URL with current user',
-      type: UserURLType,
-      args: { urlId: { type: GraphQLNonNull(GraphQLID) } },
+      type: CreateUserURLPayload,
+      args: {
+        input: {
+          type: GraphQLNonNull(CreateCurrentUserURLInputType),
+        },
+      },
       resolve: async (_, args, context) => {
         const {
           type,
           id: urlId,
-        } = fromGlobalId(args.urlId);
+        } = fromGlobalId(args.input.urlId);
         if (type === 'URL') {
           return createUserURL({
             userId: context.currentUser.id,
@@ -67,62 +61,51 @@ const Root = new GraphQLObjectType({
         throw new Error('Expected a URL id');
       },
     },
-    deleteUserURLForCurrentUser: {
-      name: 'deleteUserURLForCurrentUser',
-      description: 'Delete a URL associated with current user',
-      type: DeleteUserURLForCurrentUserPayloadType,
+    deleteURLForCurrentUser: {
+      name: 'deleteURLForCurrentUser',
+      description: 'Delete a URL associated with the Current User',
+      type: DeleteURLForCurrentUserPayloadType,
       args: {
         input: {
-          type: GraphQLNonNull(DeleteUserURLForCurrentUserInput),
+          type: GraphQLNonNull(DeleteURLForCurrentUserInputType),
         },
       },
       resolve: async (_, args) => {
         const {
           type,
-          id: userURLId,
-        } = fromGlobalId(args.input.userURLId);
-        if (type === 'UserURL') {
-          await deleteUserURL(userURLId);
-          return {
-            id: userURLId,
-          };
+          id: urlId,
+        } = fromGlobalId(args.input.urlId);
+        if (type === 'URL') {
+          return deleteUserURL(urlId);
         }
 
-        throw new Error('Expected a UserURL id');
+        throw new Error('Expected a URL id');
       },
     },
+    createLabel: {
+      name: 'createLabel',
+      description: 'Create a Label',
+      type: LabelType,
+      args: {
+        input: {
+          type: GraphQLNonNull(CreateLabelInput),
+        },
+      },
+      resolve: async (_, args) => createLabel(args.input.name),
+    },
     addLabelToURLForCurrentUser: {
-      name: 'Add label to URL',
-      description: 'Add label to specified URL fro current user',
-      type: URLType,
+      name: 'addLabelToURLForCurrentUser',
+      description: 'Associate specified Label and UserURL',
+      type: AddLabelToURLPayload,
       args: {
         input: {
           type: GraphQLNonNull(AddLabelInput),
         },
       },
-      resolve: async (_, args, context) => {
-        const userId = context.currentUser.id;
-        const url = await getByURL(args.input.url);
-        if (!url) {
-          throw new Error(`URL ${args.input.url} does not exist`);
-        }
-        const userURL = await getUserURL({ userId, urlId: url.id });
-        if (!userURL) {
-          throw new Error('User does not have URL');
-        }
-        let label = await getLabelByName(args.input.name);
-        if (!label) {
-          label = await createLabel({ name: args.input.name });
-        }
-        await createUserURLLabel({ userURLId: userURL.id, labelId: label.id });
-        const userURLLabels = await getAllUserURLLabelsForUserURL(userURL.id);
-        const labelIds = userURLLabels.map(uul => uul.label_id);
-        const labels = await getLabelsByIds(labelIds);
-        return URL({
-          ...url,
-          labels: labels.map(l => Label(l)),
-        });
-      },
+      resolve: async (_, args, context) => addLabelToURLForCurrentUser({
+        currentUser: context.currentUser,
+        args,
+      }),
     },
   },
 });

@@ -20,12 +20,19 @@ export default async function getUserURL(id) {
     getUserById(userURL.user_id),
     getURLById(userURL.url_id),
   ]);
-  return UserURL({
-    id: userURL.id,
-    url: URL({
-      id: url.id,
-      url: url.url,
-    }),
-    user: User(user),
+  return URL({
+    id: Number(url.id),
+    url: url.url,
   });
+  // return UserURL({
+  //   id: Number(userURL.id),
+  //   url: URL({
+  //     id: Number(url.id),
+  //     url: url.url,
+  //   }),
+  //   user: User({
+  //     id: Number(user.id),
+  //     emailAddress: user.emailAddress,
+  //   }),
+  // });
 }

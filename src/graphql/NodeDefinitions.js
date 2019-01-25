@@ -6,12 +6,10 @@ import {
 import User from './data/nodes/User';
 import URL from './data/nodes/URL';
 import Label from './data/nodes/Label';
-import UserURL from './data/nodes/UserURL';
 
 import UserType from './types/User';
 import URLType from './types/URL';
 import LabelType from './types/Label';
-import UserURLType from './types/UserURL';
 
 import {
   getById as getUserById,
@@ -22,9 +20,6 @@ import {
 import {
   getById as getLabelById,
 } from '../store/labels';
-import {
-  getById as getUserURLById,
-} from '../store/userURLs';
 
 const { nodeInterface, nodeField } = nodeDefinitions(
   async (globalId) => {
@@ -49,21 +44,6 @@ const { nodeInterface, nodeField } = nodeDefinitions(
       return URL({ id: urlId, url });
     }
 
-    if (type === 'UserURL') {
-      const {
-        id: userURLId,
-        url_id: urlId,
-        user_id: userId,
-      } = await getUserURLById(id);
-      const user = await getUserById(userId);
-      const url = await getURLById(urlId);
-      return UserURL({
-        id: userURLId,
-        user: User(user),
-        url: URL(url),
-      });
-    }
-
     if (type === 'Label') {
       const {
         id: labelId,
@@ -81,10 +61,6 @@ const { nodeInterface, nodeField } = nodeDefinitions(
 
     if (obj instanceof URL) {
       return URLType;
-    }
-
-    if (obj instanceof UserURL) {
-      return UserURLType;
     }
 
     if (obj instanceof Label) {

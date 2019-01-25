@@ -3,8 +3,8 @@ import knex from './knex';
 const TABLE_NAME = 'labels';
 const ROWS = ['id', 'name', 'created_at', 'updated_at'];
 
-async function create({ name }) {
-  const rows = await knex(TABLE_NAME).insert({ name }).returning(ROWS);
+async function create({ name, transaction }) {
+  const rows = await knex(TABLE_NAME).returning(ROWS).insert({ name }).transacting(transaction);
   return rows[0];
 }
 

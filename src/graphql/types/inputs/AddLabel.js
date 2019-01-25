@@ -1,17 +1,17 @@
 import {
   GraphQLInputObjectType,
   GraphQLNonNull,
-  GraphQLString,
+  GraphQLID,
 } from 'graphql';
 
 const AddLabel = new GraphQLInputObjectType({
   name: 'AddLabelInput',
   fields: {
-    url: {
-      type: GraphQLNonNull(GraphQLString),
+    urlId: {
+      type: GraphQLNonNull(GraphQLID),
     },
-    name: {
-      type: GraphQLNonNull(GraphQLString),
+    labelId: {
+      type: GraphQLNonNull(GraphQLID),
     },
   },
 });

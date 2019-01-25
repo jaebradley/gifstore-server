@@ -4,11 +4,7 @@ import {
 } from 'graphql';
 import {
   globalIdField,
-  connectionFromPromisedArray,
-  connectionArgs,
 } from 'graphql-relay';
-import LabelsConnection from '../connections/Labels';
-import getURLLabels from '../data/getURLLabels';
 import {
   nodeInterface,
 } from '../NodeDefinitions';
@@ -22,12 +18,6 @@ const UserURL = new GraphQLObjectType({
     id: globalIdField('UserURL'),
     url: {
       type: GraphQLNonNull(URLType),
-    },
-    labels: {
-      type: LabelsConnection,
-      description: 'Labels for URL assigned to a User',
-      args: connectionArgs,
-      resolve: (userURL, args) => connectionFromPromisedArray(getURLLabels(userURL.get('id')), args),
     },
   },
 });
