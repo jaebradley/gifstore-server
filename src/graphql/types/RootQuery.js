@@ -1,4 +1,6 @@
 import {
+  GraphQLNonNull,
+  GraphQLString,
   GraphQLObjectType,
 } from 'graphql';
 
@@ -7,9 +9,11 @@ import {
 } from '../../store/users';
 import UserType from './User';
 import User from '../../data/User';
+import URLType from './URL';
 import {
   nodeField,
 } from '../NodeDefinitions';
+import getURLByValue from '../resolvers/getURLByValue';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQuery',
@@ -27,6 +31,15 @@ const RootQuery = new GraphQLObjectType({
           emailAddress,
         });
       },
+    },
+    url: {
+      type: URLType,
+      args: {
+        value: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: getURLByValue,
     },
     node: nodeField,
   },
