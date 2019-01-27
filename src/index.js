@@ -18,6 +18,10 @@ import identifyCurrentUser from './middlewares/identifyCurrentUser';
 
 const app = express();
 
+const unauthenticatedPaths = [
+  '/api/google/authentication',
+];
+
 const corsOptions = {
   origin: 'http://localhost:8080',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -30,7 +34,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors(corsOptions));
-app.use(expressJWT({ secret: JWT_SECRET }).unless({ path: ['/api/google/authentication'] }));
+app.use(expressJWT({ secret: JWT_SECRET }).unless({ path: unauthenticatedPaths }));
 app.use(identifyCurrentUser.unless({ path: ['/api/google/authentication'] }));
 
 app.use('/api', api);

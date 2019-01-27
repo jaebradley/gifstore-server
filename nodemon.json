@@ -3,9 +3,9 @@
     "src"
   ],
   "ignore": [
-    "build/**"
+    "src/**"
   ],
   "execMap": {
-    "js": "npm run build && npm run start"
+    // "js": "npm run build && npm run start"
   }
 }
