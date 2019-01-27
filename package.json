@@ -9,10 +9,11 @@
   "description": "Server for gifstore service",
   "main": "build/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d build --delete-dir-on-start",
-    "start": "node build/index.js",
-    "dev": "./node_modules/.bin/nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "NODE_ENV=development node_modules/.bin/webpack --config configs/webpack.config.development.js",
+    "start:prod": "NODE_ENV=production node_modules/.bin/webpack --config configs/webpack.config.production.js",
+    "lint": "./node_modules/.bin/eslint src/",
+    "precommit-check": "npm run lint && npm run test",
+    "test": "./node_modules/.bin/jest src/"
   },
   "author": "jae.b.bradley@gmail.com",
   "license": "MIT",
@@ -35,7 +36,7 @@
     "express-jwt": "^5.3.1",
     "express-promise-router": "^3.0.3",
     "express-unless": "^0.5.0",
-    "googleapis": "^36.0.0",
+    "googleapis": "^37.0.0-webpack",
     "graphql": "^14.0.2",
     "graphql-relay": "^0.5.5",
     "immutable": "^4.0.0-rc.12",
@@ -44,9 +45,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "pg": "^7.7.1",
-    "uuid": "^3.3.2",
-    "webpack": "^4.28.3",
-    "webpack-dev-server": "^3.1.14"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -54,11 +53,23 @@
     "@babel/plugin-transform-async-to-generator": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "clean-webpack-plugin": "^1.0.1",
+    "dotenv-webpack": "^1.7.0",
     "eslint": "^5.11.1",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-import-resolver-webpack": "^0.11.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.12.0",
-    "nodemon": "^1.18.9"
+    "hard-source-webpack-plugin": "^0.13.1",
+    "nodemon": "^1.18.9",
+    "nodemon-webpack-plugin": "^4.0.7",
+    "webpack": "^4.28.3",
+    "webpack-build-notifier": "^0.1.30",
+    "webpack-cli": "^3.2.1",
+    "webpack-merge": "^4.2.1",
+    "webpack-node-externals": "^1.7.2"
   }
 }

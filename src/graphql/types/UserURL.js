@@ -7,7 +7,7 @@ import {
 } from 'graphql-relay';
 import {
   nodeInterface,
-} from '../NodeDefinitions';
+} from 'GraphQL/NodeDefinitions';
 import URLType from './URL';
 
 const UserURL = new GraphQLObjectType({
