@@ -6,7 +6,7 @@ module.exports = {
   "settings": {
     'import/resolver': {
       "webpack": {
-          "config": "./config/webpack.config.common.js"
+          "config": "./configs/webpack.config.common.js"
       },
     },
   },

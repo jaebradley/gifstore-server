@@ -1,8 +1,6 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const webpack = require('webpack');
-const dotenv = require('dotenv');
 const Dotenv = require('dotenv-webpack');
-const nodeExternals = require('webpack-node-externals')
+const nodeExternals = require('webpack-node-externals');
 
 const resolveConfiguration = require('./webpack.config.resolve.js');
 const {
@@ -13,20 +11,10 @@ const {
   SOURCE_DIRECTORY,
 } = require('./constants');
 
-// Set the path parameter in the dotenv config
-const fileEnv = dotenv.config().parsed;
-
-// reduce it to a nice object, the same as before (but with the variables from the file)
-const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
-  // eslint-disable-next-line no-param-reassign
-  prev[`process.env.${next}`] = JSON.stringify(fileEnv[next]);
-  return prev;
-}, {});
-
 module.exports = {
   entry: ENTRY_FILE_PATH,
   output: {
-    filename: 'bundle.js',
+    filename: 'index.js',
     path: OUTPUT_DIRECTORY,
   },
   module: {
@@ -45,6 +33,8 @@ module.exports = {
   },
   resolve: resolveConfiguration,
   plugins: [
+    // Delete output directory on each rebuild to avoid out-of-date file artifacts
+    // (i.e file was deleted but isn't deleted from output directory)
     new CleanWebpackPlugin(
       [
         OUTPUT_DIRECTORY_NAME,
@@ -53,7 +43,6 @@ module.exports = {
         root: BASE_DIRECTORY,
       },
     ),
-    new webpack.DefinePlugin(envKeys),
     new Dotenv(),
   ],
   // https://webpack.js.org/concepts/targets/#usage

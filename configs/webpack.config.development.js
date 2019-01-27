@@ -4,8 +4,12 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 //   BundleAnalyzerPlugin,
 // } = require('webpack-bundle-analyzer');
 const WebpackBuildNotifier = require('webpack-build-notifier');
+const NodemonPlugin = require('nodemon-webpack-plugin');
 
 const common = require('./webpack.config.common');
+const {
+  OUTPUT_DIRECTORY,
+} = require('./constants');
 
 module.exports = merge.smart(
   common,
@@ -18,9 +22,14 @@ module.exports = merge.smart(
     plugins: [
       // new BundleAnalyzerPlugin(),
       new WebpackBuildNotifier({
-        title: 'Gifstore Server Build',
+        title: 'Gifstore Server',
       }),
       new HardSourceWebpackPlugin(),
+      // Nodemon restarts server in development when output bundle changes
+      new NodemonPlugin({
+        watch: OUTPUT_DIRECTORY,
+        verbose: true,
+      }),
     ],
     watch: true,
   },
