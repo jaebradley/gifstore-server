@@ -1,7 +1,3 @@
-const webpackResolveConfig = require('./configs/webpack.config.resolve');
-
-const aliases = Object.keys(webpackResolveConfig.alias).map(key => [key, webpackResolveConfig.alias[key]]);
-
 module.exports = {
   "settings": {
     'import/resolver': {
