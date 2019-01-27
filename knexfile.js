@@ -7,6 +7,7 @@ const {
   DATABASE_PASSWORD,
   DATABASE_PORT,
   DATABASE_USER,
+  DATABASE_HOST,
 } = process.env;
 
 const MIGRATIONS = Object.freeze({
@@ -18,6 +19,7 @@ const CONNECTION = Object.freeze({
   password: DATABASE_PASSWORD,
   port: DATABASE_PORT,
   user: DATABASE_USER,
+  host: DATABASE_HOST,
 });
 
 const configuration = Object.freeze({

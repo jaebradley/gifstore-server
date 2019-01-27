@@ -24,9 +24,9 @@ async function handleAuthentication(request, response, next) {
       emailAddress,
     } = userDetails;
     // TODO: @jaebradley probably want to wrap this in a transaction
-    const user = await get({ provider: 'GOOGLE', providerId });
+    let user = await get({ provider: 'GOOGLE', providerId });
     if (!user) {
-      await create({ emailAddress, provider: 'GOOGLE', providerId });
+      user = await create({ emailAddress, provider: 'GOOGLE', providerId });
     }
     const jwt = generateJWT({ userId: user.id });
     response.statusCode = 200;
