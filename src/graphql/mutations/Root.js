@@ -70,13 +70,16 @@ const Root = new GraphQLObjectType({
           type: GraphQLNonNull(DeleteURLForCurrentUserInputType),
         },
       },
-      resolve: async (_, args) => {
+      resolve: async (_, args, context) => {
         const {
           type,
           id: urlId,
         } = fromGlobalId(args.input.urlId);
         if (type === 'URL') {
-          return deleteUserURL(urlId);
+          return deleteUserURL({
+            urlId,
+            userId: context.currentUser.id,
+          });
         }
 
         throw new Error('Expected a URL id');

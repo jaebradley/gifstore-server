@@ -27,6 +27,10 @@ async function del({ id, transaction }) {
   return knex(TABLE_NAME).where({ id }).del().transacting(transaction);
 }
 
+async function deleteForUserAndURL({ userId, urlId, transaction }) {
+  return knex(TABLE_NAME).where({ user_id: userId, url_id: urlId }).del().transacting(transaction);
+}
+
 async function getById(id) {
   return knex(TABLE_NAME).where({ id }).first();
 }
@@ -34,6 +38,7 @@ async function getById(id) {
 export {
   create,
   del,
+  deleteForUserAndURL,
   get,
   getAllForUserId,
   getAllForURLId,
