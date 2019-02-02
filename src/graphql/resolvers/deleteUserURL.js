@@ -1,15 +1,16 @@
 import {
-  del,
+  deleteForUserAndURL,
 } from '../../store/userURLs';
 import knex from '../../store/knex';
 import DeleteUserURL from '../data/payloads/DeleteUserURL';
 
-export default async function deleteUserURL(id) {
+export default async function deleteUserURL({ userId, urlId }) {
   await knex.transaction(async transaction => (
-    del({
-      id,
+    deleteForUserAndURL({
+      userId,
+      urlId,
       transaction,
     })
   ));
-  return DeleteUserURL({ id });
+  return DeleteUserURL({ urlId });
 }
