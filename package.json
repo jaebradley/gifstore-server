@@ -42,6 +42,7 @@
     "immutable": "^4.0.0-rc.12",
     "jsonwebtoken": "^8.4.0",
     "knex": "0.14.6",
+    "lodash": "^4.17.11",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "pg": "^7.7.1",

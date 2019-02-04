@@ -30,4 +30,5 @@ export {
   getByIds,
   getByURL,
   getByURLs,
+  TABLE_NAME,
 };
