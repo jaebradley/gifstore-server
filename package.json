@@ -37,7 +37,7 @@
     "express-promise-router": "^3.0.3",
     "express-unless": "^0.5.0",
     "googleapis": "^37.0.0-webpack",
-    "graphql": "^14.0.2",
+    "graphql": "^14.6.0",
     "graphql-relay": "^0.5.5",
     "immutable": "^4.0.0-rc.12",
     "jsonwebtoken": "^8.4.0",
