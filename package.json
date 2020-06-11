@@ -22,7 +22,7 @@
     "url": "https://github.com/jaebradley/gifstore-server.git"
   },
   "dependencies": {
-    "@babel/runtime": "^7.2.0",
+    "@babel/runtime": "^7.9.6",
     "axios": "^0.18.0",
     "bcrypt": "^3.0.3",
     "bcryptjs": "^2.4.3",
