@@ -36,7 +36,7 @@
     "express-jwt": "^5.3.1",
     "express-promise-router": "^3.0.3",
     "express-unless": "^0.5.0",
-    "googleapis": "^37.0.0-webpack",
+    "googleapis": "^49.0.0",
     "graphql": "^14.0.2",
     "graphql-relay": "^0.5.5",
     "immutable": "^4.0.0-rc.12",
